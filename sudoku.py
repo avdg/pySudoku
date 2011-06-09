@@ -28,8 +28,32 @@ def main():
     [0, 0, 0, 0, 0, 7, 0, 0, 0],
     [3, 2, 0, 0, 8, 0, 1, 5, 0],
   ]
+  sudoku3 = [
+    [6, 0, 0, 8, 5, 0, 9, 3, 1],
+    [3, 5, 8, 0, 0, 0, 0, 6, 0],
+    [0, 0, 0, 0, 3, 0, 0, 0, 2],
+    [0, 0, 0, 0, 1, 8, 3, 9, 0],
+    [4, 0, 0, 0, 0, 0, 0, 0, 8],
+    [0, 8, 3, 0, 6, 0, 1, 0, 0],
+    [8, 3, 0, 0, 9, 0, 0, 0, 0],
+    [0, 6, 0, 0, 8, 0, 2, 1, 9],
+    [1, 0, 9, 0, 0, 5, 0, 0, 3],
+  ]
+  sudoku4 = [
+    [0, 0, 7, 0, 1, 3, 0, 0, 6],
+    [0, 2, 0, 0, 9, 0, 0, 7, 0],
+    [0, 3, 0, 8, 0, 0, 0, 0, 9],
+    [0, 4, 3, 1, 0, 0, 9, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 2, 0, 0, 4, 3, 5, 0],
+    [0, 0, 0, 0, 0, 1, 0, 9, 0],
+    [0, 1, 0, 0, 7, 0, 0, 8, 0],
+    [5, 0, 0, 6, 4, 0, 7, 0, 0],
+  ]
   solveSudoku(sudoku1)
   solveSudoku(sudoku2)
+  solveSudoku(sudoku3)
+  solveSudoku(sudoku4)
 
 """
   Solves a sudoku while displaying some basic debug data
@@ -43,6 +67,10 @@ def solveSudoku(sudoku):
   outputSudoku(grid.getSudoku())
   print
   print str(grid.sudoku)
+  print str(grid.isSolved())
+  print
+  print '--------------------------------------------------------------------------------'
+  print
 
 """
   Printing a 2d sudoku
@@ -103,6 +131,30 @@ class SudokuSolver:
   """
   def solve(self):
     self.solveSolved()
+
+  """
+    Checks the state of the sudoku
+  """
+  def isSolved(self):
+    found = {
+      'empty'    : 0,
+      'solved'   : 0,
+      'unsolved' : 0,
+    }
+    for x, rows in enumerate(self.sudoku):
+      for y, cell in enumerate(rows):
+        if len(cell) == 1:
+          found['solved'] += 1
+        elif len(cell) == 0:
+          found['empty'] += 1
+        else:
+          found['unsolved'] += 1
+    if found['empty'] > 0:
+      return 'Error'
+    elif found['unsolved'] > 0:
+      return 'Not solved'
+    else:
+      return True
 
   """
     Scraps leftovers in grid:
