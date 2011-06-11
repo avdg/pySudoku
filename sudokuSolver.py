@@ -53,22 +53,14 @@ class SudokuSolver:
     Checks the state of the sudoku
   """
   def isSolved(self):
-    found = {
-      'empty'    : 0,
-      'solved'   : 0,
-      'unsolved' : 0,
-    }
+    unsolved = 0
     for x, rows in enumerate(self.sudoku):
       for y, cell in enumerate(rows):
-        if len(cell) == 1:
-          found['solved'] += 1
-        elif len(cell) == 0:
-          found['empty'] += 1
-        else:
-          found['unsolved'] += 1
-    if found['empty'] > 0:
-      return 'Error'
-    elif found['unsolved'] > 0:
+        if len(cell) == 0:
+          return 'Error'
+        elif len(cell) != 1:
+          unsolved += 1
+    if unsolved > 0:
       return 'Not solved'
     else:
       return True
