@@ -49,6 +49,10 @@ class SudokuSolver:
   def solve(self):
     self.solveSolved()
 
+    if self.isSolved() != True:
+      self.cleanupTwins()
+      self.solveSolved()
+
   """
     Checks the state of the sudoku
   """
@@ -108,3 +112,32 @@ class SudokuSolver:
               self.sudoku[cleanCell[0]][cleanCell[1]].remove(number)
               hit = True
     return hit
+
+  """
+    Tries to find a match where 2 numbers are found
+    at 2 identical cells in a row/block/column
+  """
+  def cleanupTwins(self):
+    # lookup
+    for name, blocks in self.relation.iteritems():
+      for row, block in enumerate(blocks):
+        twins = [[] for x in range(10)] # twins[x][] = [cell1, cell2]
+        for x in range(1, 10):
+          found = []
+          for cell in block:
+            if x in self.sudoku[cell[0]][cell[1]]:
+              found.append([cell[0], cell[1]])
+          if len(found) == 2:
+            twins[x].append(found)
+        # cleanup
+        for x in range(1, 10):
+          for xItem in twins[x]:
+            for y in range(x + 1, 10):
+              for yItem in twins[y]:
+                if xItem == yItem:
+                  for clearBlock in xItem:
+                    for z in range(1, 10):
+                      if x == z or y == z or \
+                          not z in self.sudoku[clearBlock[0]][clearBlock[1]]:
+                        continue
+                      self.sudoku[clearBlock[0]][clearBlock[1]].remove(z)
